@@ -1,0 +1,13 @@
+body {
+    overflow: hidden;
+}
+/*后浪推前浪：后面的样式覆盖前面的，各自也保留各自独特的样式*/
+body > .page {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+body > .page > section {
+    width: 50vw;
+    height: 50vh;
+}

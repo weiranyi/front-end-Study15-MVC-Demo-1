@@ -1,0 +1,7 @@
+*{margin: 0;padding: 0}
+*{box-sizing:border-box}
+*::before,*::after{box-sizing: border-box}
+ol,ul{list-style: none;}
+/*
+大概14-19像素是滚动条像素，mac系统不算滚动条
+*/
