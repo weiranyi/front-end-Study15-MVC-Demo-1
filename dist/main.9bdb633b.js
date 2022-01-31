@@ -11263,7 +11263,8 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-console.log(_jquery2.default);
+var html = '\n    <section id="app1">\n        <div class="outer"><span id="number">100</span></div>\n        <div class="action">\n            <button id="add1">+1</button>\n            <button id="minus1">-1</button>\n            <button id="mul2">*2</button>\n            <button id="divide2">/2</button>\n        </div>\n    </section>\n';
+var $element = (0, _jquery2.default)(html).prependTo((0, _jquery2.default)('body>.page'));
 
 var $button1 = (0, _jquery2.default)('#add1');
 var $button2 = (0, _jquery2.default)('#minus1');
@@ -11312,6 +11313,8 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = '\n    <section id="app2">\n        <ol class="tab-bar">\n            <li><span>1</span></li>\n            <li><span>2</span></li>\n        </ol>\n        <ol class="tab-content">\n            <li>\u5185\u5BB91</li>\n            <li>\u5185\u5BB92</li>\n        </ol>\n    </section>';
+var $element = (0, _jquery2.default)(html).appendTo((0, _jquery2.default)('body>.page'));
 var $tabBar = (0, _jquery2.default)('#app2 .tab-bar');
 var $tabContent = (0, _jquery2.default)('#app2 .tab-content');
 var localKey = 'app2.index';
@@ -11352,6 +11355,8 @@ require('../css/app3.css');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = '\n    <section id="app3">\n        <div class="square"></div>\n    </section>\n';
+var $element = (0, _jquery2.default)(html).appendTo((0, _jquery2.default)('body>.page'));
 var $square = (0, _jquery2.default)('#app3 .square');
 var localKey = "app3.active";
 // yes no undefined
@@ -11393,6 +11398,8 @@ require("../css/app4.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n    <section id=\"app4\">\n        <div class=\"circle\"></div>\n    </section>\n";
+var $element = (0, _jquery2.default)(html).appendTo((0, _jquery2.default)('body > .page'));
 var $circle = (0, _jquery2.default)('#app4 .circle');
 $circle.on('mouseenter', function () {
     $circle.addClass('active');

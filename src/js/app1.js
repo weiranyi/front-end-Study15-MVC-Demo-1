@@ -1,7 +1,18 @@
 import '../css/app1.css'
 import $ from "jquery";
 
-console.log($)
+const html = `
+    <section id="app1">
+        <div class="outer"><span id="number">100</span></div>
+        <div class="action">
+            <button id="add1">+1</button>
+            <button id="minus1">-1</button>
+            <button id="mul2">*2</button>
+            <button id="divide2">/2</button>
+        </div>
+    </section>
+`
+const $element = $(html).prependTo($('body>.page'));
 
 const $button1 = $('#add1');
 const $button2 = $('#minus1');
