@@ -11314,11 +11314,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var $tabBar = (0, _jquery2.default)('#app2 .tab-bar');
 var $tabContent = (0, _jquery2.default)('#app2 .tab-content');
+var localKey = 'app2.index';
+var index = localStorage.getItem(localKey) || 0; // 新的语法支持的是??
 $tabBar.on('click', 'li', function (e) {
     // 事件委托
     var $li = (0, _jquery2.default)(e.currentTarget);
     $li.addClass("selected").siblings().removeClass("selected");
     var index = $li.index();
+    localStorage.setItem(localKey, index);
     // 让css自己去管怎么实现; 样式和行为分离
     $tabContent.children().eq(index).addClass('active').siblings().removeClass('active');
     /* 永远不要用.css
@@ -11332,7 +11335,7 @@ $tabBar.on('click', 'li', function (e) {
         .siblings().hidden()
     */
 });
-$tabBar.children().eq(0).trigger('click');
+$tabBar.children().eq(index).trigger('click');
 },{"../css/app2.css":"css/app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"css/app3.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
@@ -11350,9 +11353,29 @@ require('../css/app3.css');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var $square = (0, _jquery2.default)('#app3 .square');
+var localKey = "app3.active";
+// yes no undefined
+var active = localStorage.getItem(localKey) === 'yes';
+
+// if (active){
+//     $square.addClass('active');
+// }else {
+//     $square.removeClass('active');
+// }
+
+$square.toggleClass('active', active);
+// $square.toggleClass('active')
 $square.on('click', function () {
+    if ($square.hasClass('active')) {
+        $square.removeClass('active');
+        // setItem中第2个参数的值就算写的是布尔，依然会变成字符串，为了消除这个疑惑用no
+        localStorage.setItem(localKey, 'no');
+    } else {
+        $square.addClass('active');
+        localStorage.setItem(localKey, 'yes');
+    }
     // toggleClass有就加上没有就移除
-    $square.toggleClass('active');
+    // $square.toggleClass('active')
 });
 },{"jquery":"../node_modules/jquery/dist/jquery.js","../css/app3.css":"css/app3.css"}],"css/app4.css":[function(require,module,exports) {
 
@@ -11419,7 +11442,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61551' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50785' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -11561,4 +11584,4 @@ function hmrAccept(bundle, id) {
   });
 }
 },{}]},{},["../../../../../.config/yarn/global/node_modules/parcel/src/builtins/hmr-runtime.js","js/main.js"], null)
-//# sourceMappingURL=/main.cf47da08.map
+//# sourceMappingURL=/main.9bdb633b.map

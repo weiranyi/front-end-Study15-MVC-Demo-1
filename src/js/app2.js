@@ -2,6 +2,8 @@ import '../css/app2.css'
 import $ from "jquery"
 const $tabBar = $('#app2 .tab-bar')
 const $tabContent = $('#app2 .tab-content')
+const localKey = 'app2.index';
+const index = localStorage.getItem(localKey) || 0 // 新的语法支持的是??
 $tabBar.on('click','li',(e)=>{
     // 事件委托
     const $li = $(e.currentTarget)
@@ -9,6 +11,7 @@ $tabBar.on('click','li',(e)=>{
         .siblings()
         .removeClass("selected")
     const index = $li.index()
+    localStorage.setItem(localKey,index)
     // 让css自己去管怎么实现; 样式和行为分离
     $tabContent.children()
         .eq(index).addClass('active')
@@ -25,4 +28,4 @@ $tabBar.on('click','li',(e)=>{
     */
 
 })
-$tabBar.children().eq(0).trigger('click');
+$tabBar.children().eq(index).trigger('click');
