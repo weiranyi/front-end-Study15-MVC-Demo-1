@@ -11255,6 +11255,10 @@ return jQuery;
 },{"process":"../../../../../.config/yarn/global/node_modules/process/browser.js"}],"js/app1.js":[function(require,module,exports) {
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 require('../css/app1.css');
 
 var _jquery = require('jquery');
@@ -11263,40 +11267,62 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var html = '\n    <section id="app1">\n        <div class="outer"><span id="number">100</span></div>\n        <div class="action">\n            <button id="add1">+1</button>\n            <button id="minus1">-1</button>\n            <button id="mul2">*2</button>\n            <button id="divide2">/2</button>\n        </div>\n    </section>\n';
-var $element = (0, _jquery2.default)(html).prependTo((0, _jquery2.default)('body>.page'));
+// 数据相关都放到m
+var m = {
+    data: {
+        n: parseInt(localStorage.getItem('n'))
+    }
+    // 视图相关放到v
+};var v = {
+    el: null,
+    html: '\n    <div>\n        <div class="outer"><span id="number">{{n}}</span></div>\n        <div class="action">\n            <button id="add1">+1</button>\n            <button id="minus1">-1</button>\n            <button id="mul2">*2</button>\n            <button id="divide2">/2</button>\n        </div>\n    </div>\n    ',
+    init: function init(container) {
+        v.el = (0, _jquery2.default)(container);
+        v.render();
+    },
+    render: function render() {
+        if (v.el.children.length !== 0) {
+            v.el.empty();
+        }
+        (0, _jquery2.default)(v.html.replace('{{n}}', m.data.n)).appendTo((0, _jquery2.default)(v.el));
+    }
+};
 
-var $button1 = (0, _jquery2.default)('#add1');
-var $button2 = (0, _jquery2.default)('#minus1');
-var $button3 = (0, _jquery2.default)('#mul2');
-var $button4 = (0, _jquery2.default)('#divide2');
-var $number = (0, _jquery2.default)("#number");
-var n = localStorage.getItem('n');
-$number.text(n || 100);
-$button1.on('click', function () {
-    var n = parseInt($number.text());
-    n += 1;
-    localStorage.setItem('n', n);
-    $number.text(n);
-});
-$button2.on('click', function () {
-    var n = parseInt($number.text());
-    n -= 1;
-    localStorage.setItem('n', n);
-    $number.text(n);
-});
-$button3.on('click', function () {
-    var n = parseInt($number.text());
-    n *= 2;
-    localStorage.setItem('n', n);
-    $number.text(n);
-});
-$button4.on('click', function () {
-    var n = parseInt($number.text());
-    n /= 2;
-    localStorage.setItem('n', n);
-    $number.text(n);
-});
+// 其他放到C
+var c = {
+    // 提供初始化方法
+    init: function init(container) {
+        v.init(container);
+        c.ui = {
+            button1: (0, _jquery2.default)('#add1'),
+            button2: (0, _jquery2.default)('#minus1'),
+            button3: (0, _jquery2.default)('#mul2'),
+            button4: (0, _jquery2.default)('#divide2'),
+            number: (0, _jquery2.default)("#number")
+        };
+        c.bindEvents();
+    },
+    bindEvents: function bindEvents() {
+        v.el.on('click', '#add1', function () {
+            m.data.n += 1; // console.log(m.data.n)
+            v.render();
+        });
+        v.el.on('click', '#minus1', function () {
+            m.data.n -= 1; // console.log(m.data.n)
+            v.render();
+        });
+        v.el.on('click', '#mul2', function () {
+            m.data.n *= 2; // console.log(m.data.n)
+            v.render();
+        });
+        v.el.on('click', '#divide2', function () {
+            m.data.n /= 2; // console.log(m.data.n)
+            v.render();
+        });
+    }
+};
+// 将c暴露出去
+exports.default = c;
 },{"../css/app1.css":"css/app1.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"css/app2.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
@@ -11413,13 +11439,21 @@ require('../css/reset.css');
 
 require('../css/page.css');
 
-require('../js/app1.js');
+var _app = require('../js/app1.js');
+
+var _app2 = _interopRequireDefault(_app);
 
 require('../js/app2.js');
 
 require('../js/app3.js');
 
 require('../js/app4.js');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import $ from 'jquery'
+
+_app2.default.init('#app1');
 },{"../css/reset.css":"css/reset.css","../css/page.css":"css/page.css","../js/app1.js":"js/app1.js","../js/app2.js":"js/app2.js","../js/app3.js":"js/app3.js","../js/app4.js":"js/app4.js"}],"../../../../../.config/yarn/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -11449,7 +11483,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50785' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '50283' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
