@@ -1,10 +1,23 @@
 import '../css/app1.css'
 import $ from "jquery";
 
+const eventBus=$({});
+
 // 数据相关都放到m
 const m = {
     data: {
         n: parseInt(localStorage.getItem('n'))
+    },
+    create() {
+    },
+    delete() {
+    },
+    update(data) {
+        Object.assign(m.data, data)
+        eventBus.trigger('m:updated')
+        localStorage.setItem('n', m.data.n)
+    },
+    get() {
     }
 }
 // 视图相关放到v
@@ -23,16 +36,15 @@ const v = {
     `,
     init(container) {
         v.el = $(container)
-        v.render()
     },
-    render() {
+    render(n) {
+        console.log(n)
         if (v.el.children.length !== 0) {
             v.el.empty()
         }
-        $(v.html.replace('{{n}}', m.data.n))
+        $(v.html.replace('{{n}}', n))
             .appendTo($(v.el))
     }
-
 }
 
 // 其他放到C
@@ -40,32 +52,38 @@ const c = {
     // 提供初始化方法
     init(container) {
         v.init(container)
-        c.ui = {
-            button1: $('#add1'),
-            button2: $('#minus1'),
-            button3: $('#mul2'),
-            button4: $('#divide2'),
-            number: $("#number")
-        }
-        c.bindEvents()
+        v.render(m.data.n)
+        c.autobindEvents()
+        eventBus.on('m:updated', () => {
+            v.render(m.data.n)
+        })
     },
-    bindEvents() {
-        v.el.on('click', '#add1', () => {
-            m.data.n += 1; // console.log(m.data.n)
-            v.render()
-        })
-        v.el.on('click', '#minus1', () => {
-            m.data.n -= 1; // console.log(m.data.n)
-            v.render()
-        })
-        v.el.on('click', '#mul2', () => {
-            m.data.n *= 2; // console.log(m.data.n)
-            v.render()
-        })
-        v.el.on('click', '#divide2', () => {
-            m.data.n /= 2; // console.log(m.data.n)
-            v.render()
-        })
+    events: {
+        'click #add1': 'add',
+        'click #minus1': 'minus',
+        'click #mul2': 'mul',
+        'click #divide2': 'divide'
+    },
+    add() {
+        m.update({n: m.data.n + 1})
+    },
+    minus() {
+        m.update({n: m.data.n - 1})
+    },
+    mul() {
+        m.update({n: m.data.n * 2})
+    },
+    divide() {
+        m.update({n: m.data.n / 2})
+    },
+    autobindEvents() {
+        for (let key in c.events) {
+            const value = c[c.events[key]]
+            const spaceIndex = key.indexOf(' ')
+            const part1 = key.slice(0, spaceIndex)
+            const part2 = key.slice(spaceIndex + 1)
+            v.el.on(part1, part2, value)
+        }
     }
 }
 // 将c暴露出去

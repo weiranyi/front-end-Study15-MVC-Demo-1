@@ -11267,24 +11267,35 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var eventBus = (0, _jquery2.default)({});
+
 // 数据相关都放到m
 var m = {
     data: {
         n: parseInt(localStorage.getItem('n'))
-    }
-    // 视图相关放到v
-};var v = {
+    },
+    create: function create() {},
+    delete: function _delete() {},
+    update: function update(data) {
+        Object.assign(m.data, data);
+        eventBus.trigger('m:updated');
+        localStorage.setItem('n', m.data.n);
+    },
+    get: function get() {}
+};
+// 视图相关放到v
+var v = {
     el: null,
     html: '\n    <div>\n        <div class="outer"><span id="number">{{n}}</span></div>\n        <div class="action">\n            <button id="add1">+1</button>\n            <button id="minus1">-1</button>\n            <button id="mul2">*2</button>\n            <button id="divide2">/2</button>\n        </div>\n    </div>\n    ',
     init: function init(container) {
         v.el = (0, _jquery2.default)(container);
-        v.render();
     },
-    render: function render() {
+    render: function render(n) {
+        console.log(n);
         if (v.el.children.length !== 0) {
             v.el.empty();
         }
-        (0, _jquery2.default)(v.html.replace('{{n}}', m.data.n)).appendTo((0, _jquery2.default)(v.el));
+        (0, _jquery2.default)(v.html.replace('{{n}}', n)).appendTo((0, _jquery2.default)(v.el));
     }
 };
 
@@ -11293,32 +11304,39 @@ var c = {
     // 提供初始化方法
     init: function init(container) {
         v.init(container);
-        c.ui = {
-            button1: (0, _jquery2.default)('#add1'),
-            button2: (0, _jquery2.default)('#minus1'),
-            button3: (0, _jquery2.default)('#mul2'),
-            button4: (0, _jquery2.default)('#divide2'),
-            number: (0, _jquery2.default)("#number")
-        };
-        c.bindEvents();
+        v.render(m.data.n);
+        c.autobindEvents();
+        eventBus.on('m:updated', function () {
+            v.render(m.data.n);
+        });
     },
-    bindEvents: function bindEvents() {
-        v.el.on('click', '#add1', function () {
-            m.data.n += 1; // console.log(m.data.n)
-            v.render();
-        });
-        v.el.on('click', '#minus1', function () {
-            m.data.n -= 1; // console.log(m.data.n)
-            v.render();
-        });
-        v.el.on('click', '#mul2', function () {
-            m.data.n *= 2; // console.log(m.data.n)
-            v.render();
-        });
-        v.el.on('click', '#divide2', function () {
-            m.data.n /= 2; // console.log(m.data.n)
-            v.render();
-        });
+
+    events: {
+        'click #add1': 'add',
+        'click #minus1': 'minus',
+        'click #mul2': 'mul',
+        'click #divide2': 'divide'
+    },
+    add: function add() {
+        m.update({ n: m.data.n + 1 });
+    },
+    minus: function minus() {
+        m.update({ n: m.data.n - 1 });
+    },
+    mul: function mul() {
+        m.update({ n: m.data.n * 2 });
+    },
+    divide: function divide() {
+        m.update({ n: m.data.n / 2 });
+    },
+    autobindEvents: function autobindEvents() {
+        for (var key in c.events) {
+            var value = c[c.events[key]];
+            var spaceIndex = key.indexOf(' ');
+            var part1 = key.slice(0, spaceIndex);
+            var part2 = key.slice(spaceIndex + 1);
+            v.el.on(part1, part2, value);
+        }
     }
 };
 // 将c暴露出去
