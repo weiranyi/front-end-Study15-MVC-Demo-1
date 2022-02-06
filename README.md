@@ -3,6 +3,9 @@ yarn init -y
 ### 加入jquery
 yarn add jquery
 
+### 使用技巧收获
+fn+f2 可以快速定位WebStorm认为有问题的地方
+
 ### 抽象思维：
 #### 1、最小知识原则
 ```

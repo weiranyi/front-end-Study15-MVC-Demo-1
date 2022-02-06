@@ -11303,35 +11303,7 @@ var Model = function () {
 }();
 
 exports.default = Model;
-},{}],"js/base/View.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _jquery = require("jquery");
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var View = function View(_ref) {
-    var el = _ref.el,
-        html = _ref.html,
-        render = _ref.render;
-
-    _classCallCheck(this, View);
-
-    this.el = (0, _jquery2.default)(el);
-    this.html = html;
-    this.render = render;
-};
-
-exports.default = View;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/app1.js":[function(require,module,exports) {
+},{}],"js/app1.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11348,10 +11320,6 @@ var _Model = require("./base/Model");
 
 var _Model2 = _interopRequireDefault(_Model);
 
-var _View = require("./base/View");
-
-var _View2 = _interopRequireDefault(_View);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var eventBus = (0, _jquery2.default)({});
@@ -11367,32 +11335,25 @@ var m = new _Model2.default({
         localStorage.setItem('n', m.data.n);
     }
 });
-
-// 其他放到C
-var c = {
-    v: null,
-    initV: function initV() {
-        c.v = new _View2.default({
-            el: c.container,
-            html: "\n                <div>\n                    <div class=\"outer\"><span id=\"number\">{{n}}</span></div>\n                    <div class=\"action\">\n                        <button id=\"add1\">+1</button>\n                        <button id=\"minus1\">-1</button>\n                        <button id=\"mul2\">*2</button>\n                        <button id=\"divide2\">/2</button>\n                    </div>\n                </div>\n            ",
-            render: function render(n) {
-                if (c.v.el.children.length !== 0) {
-                    c.v.el.empty();
-                }
-                (0, _jquery2.default)(c.v.html.replace('{{n}}', n)).appendTo((0, _jquery2.default)(c.v.el));
-            }
-        });
-        c.v.render(m.data.n);
-    },
-
+// vue.js 定义为v不是c
+var view = {
+    el: null,
+    html: "\n    <div>\n        <div class=\"outer\"><span id=\"number\">{{n}}</span></div>\n        <div class=\"action\">\n            <button id=\"add1\">+1</button>\n            <button id=\"minus1\">-1</button>\n            <button id=\"mul2\">*2</button>\n            <button id=\"divide2\">/2</button>\n        </div>\n    </div>\n    ",
     // 提供初始化方法
     init: function init(container) {
-        c.container = container;
-        c.initV();
-        c.autobindEvents();
+        view.el = (0, _jquery2.default)(container);
+        view.render(m.data.n);
+        view.autobindEvents();
         eventBus.on('m:updated', function () {
-            c.v.render(m.data.n);
+            view.render(m.data.n);
         });
+    },
+    render: function render(n) {
+        console.log(n);
+        if (view.el.children.length !== 0) {
+            view.el.empty();
+        }
+        (0, _jquery2.default)(view.html.replace('{{n}}', n)).appendTo((0, _jquery2.default)(view.el));
     },
 
     events: {
@@ -11414,18 +11375,18 @@ var c = {
         m.update({ n: m.data.n / 2 });
     },
     autobindEvents: function autobindEvents() {
-        for (var key in c.events) {
-            var value = c[c.events[key]];
+        for (var key in view.events) {
+            var value = view[view.events[key]];
             var spaceIndex = key.indexOf(' ');
             var part1 = key.slice(0, spaceIndex);
             var part2 = key.slice(spaceIndex + 1);
-            c.v.el.on(part1, part2, value);
+            view.el.on(part1, part2, value);
         }
     }
 };
 // 将c暴露出去
-exports.default = c;
-},{"../css/app1.css":"css/app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model":"js/base/Model.js","./base/View":"js/base/View.js"}],"css/app2.css":[function(require,module,exports) {
+exports.default = view;
+},{"../css/app1.css":"css/app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model":"js/base/Model.js"}],"css/app2.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
 module.hot.dispose(reloadCSS);
@@ -11458,32 +11419,28 @@ var m = new _Model2.default({
     update: function update(data) {
         Object.assign(m.data, data);
         eventBus.trigger('m:updated');
-        localStorage.setItem('index', m.data.index);
+        localStorage.setItem('app2.index', m.data.index);
     }
 });
-var v = {
+var view = {
     el: null,
     html: function html(index) {
         return "\n    <div>\n        <ol class=\"tab-bar\">\n            <li class=\"" + (index === 0 ? 'selected' : '') + "\" data-index=\"0\"><span>1</span></li>\n            <li class=\"" + (index === 1 ? 'selected' : '') + "\" data-index=\"1\"><span>2</span></li>\n        </ol>\n        <ol class=\"tab-content\">\n            <li class=\"" + (index === 0 ? 'active' : '') + "\" >\u5185\u5BB91</li>\n            <li class=\"" + (index === 1 ? 'active' : '') + "\" >\u5185\u5BB92</li>\n        </ol>\n    </div>";
     },
-    init: function init(el) {
-        v.el = (0, _jquery2.default)(el);
-    },
     render: function render(index) {
-        if (v.el.children.length !== 0) {
-            v.el.empty();
+        if (view.el.children.length !== 0) {
+            view.el.empty();
         }
-        (0, _jquery2.default)(v.html(index)).appendTo(v.el);
-    }
-};
-var c = {
+        (0, _jquery2.default)(view.html(index)).appendTo(view.el);
+    },
+
     // 提供初始化方法
     init: function init(container) {
-        v.init(container);
-        v.render(m.data.index);
-        c.autobindEvents();
+        view.el = (0, _jquery2.default)(container);
+        view.render(m.data.index);
+        view.autobindEvents();
         eventBus.on('m:updated', function () {
-            v.render(m.data.index);
+            view.render(m.data.index);
         });
     },
 
@@ -11495,17 +11452,17 @@ var c = {
         m.update({ index: x });
     },
     autobindEvents: function autobindEvents() {
-        for (var key in c.events) {
-            var value = c[c.events[key]];
+        for (var key in view.events) {
+            var value = view[view.events[key]];
             var spaceIndex = key.indexOf(' ');
             var part1 = key.slice(0, spaceIndex);
             var part2 = key.slice(spaceIndex + 1);
-            v.el.on(part1, part2, value);
+            view.el.on(part1, part2, value);
         }
     }
 };
 
-exports.default = c;
+exports.default = view;
 },{"../css/app2.css":"css/app2.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model":"js/base/Model.js"}],"css/app3.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
