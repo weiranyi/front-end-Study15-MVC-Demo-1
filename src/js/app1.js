@@ -1,61 +1,57 @@
 import '../css/app1.css'
 import $ from "jquery";
+import Model from "./base/Model";
+import View from "./base/View";
 
-const eventBus=$({});
+const eventBus = $({});
 
 // 数据相关都放到m
-const m = {
+const m = new Model({
     data: {
         n: parseInt(localStorage.getItem('n'))
     },
-    create() {
-    },
-    delete() {
-    },
-    update(data) {
+    update: function (data) {
         Object.assign(m.data, data)
         eventBus.trigger('m:updated')
         localStorage.setItem('n', m.data.n)
-    },
-    get() {
     }
-}
-// 视图相关放到v
-const v = {
-    el: null,
-    html: `
-    <div>
-        <div class="outer"><span id="number">{{n}}</span></div>
-        <div class="action">
-            <button id="add1">+1</button>
-            <button id="minus1">-1</button>
-            <button id="mul2">*2</button>
-            <button id="divide2">/2</button>
-        </div>
-    </div>
-    `,
-    init(container) {
-        v.el = $(container)
-    },
-    render(n) {
-        console.log(n)
-        if (v.el.children.length !== 0) {
-            v.el.empty()
-        }
-        $(v.html.replace('{{n}}', n))
-            .appendTo($(v.el))
-    }
-}
+})
+
 
 // 其他放到C
 const c = {
+    v:null,
+    initV(){
+        c.v = new View({
+            el: c.container,
+            html: `
+                <div>
+                    <div class="outer"><span id="number">{{n}}</span></div>
+                    <div class="action">
+                        <button id="add1">+1</button>
+                        <button id="minus1">-1</button>
+                        <button id="mul2">*2</button>
+                        <button id="divide2">/2</button>
+                    </div>
+                </div>
+            `,
+            render(n) {
+                if (c.v.el.children.length !== 0) {
+                    c.v.el.empty()
+                }
+                $(c.v.html.replace('{{n}}', n))
+                    .appendTo($(c.v.el))
+            }
+        })
+        c.v.render(m.data.n)
+    },
     // 提供初始化方法
     init(container) {
-        v.init(container)
-        v.render(m.data.n)
+        c.container = container
+        c.initV()
         c.autobindEvents()
         eventBus.on('m:updated', () => {
-            v.render(m.data.n)
+            c.v.render(m.data.n)
         })
     },
     events: {
@@ -82,7 +78,7 @@ const c = {
             const spaceIndex = key.indexOf(' ')
             const part1 = key.slice(0, spaceIndex)
             const part2 = key.slice(spaceIndex + 1)
-            v.el.on(part1, part2, value)
+            c.v.el.on(part1, part2, value)
         }
     }
 }

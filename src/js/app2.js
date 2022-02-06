@@ -1,25 +1,19 @@
 import '../css/app2.css'
 import $ from "jquery"
+import Model from "./base/Model";
 
 const eventBus = $({});
 const localKey = 'app2.index'
-const m = {
+const m = new Model({
     data: {
         index: parseInt(localStorage.getItem(localKey) || 0) // 新的语法支持的是??
-    },
-    create() {
-    },
-    delete() {
-
     },
     update(data) {
         Object.assign(m.data, data)
         eventBus.trigger('m:updated')
         localStorage.setItem('index', m.data.index)
-    },
-    get() {
     }
-}
+})
 const v = {
     el: null,
     html: (index) => {
@@ -35,8 +29,8 @@ const v = {
         </ol>
     </div>`
     },
-    init(container) {
-        v.el = $(container)
+    init(el) {
+        v.el = $(el)
     },
     render(index) {
         if (v.el.children.length !== 0) {
