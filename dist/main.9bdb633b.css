@@ -17,12 +17,11 @@ body > .page {
 body > .page > section {
     width: 50vw;
     height: 50vh;
+    border: 1px solid cornflowerblue;
 }#app1{
-    border: 1px solid red;
     width: 50vw;
     height: 50vh;
 }#app2 {
-    border: 1px solid cornflowerblue;
 }
 #app2 .tab-bar {
     display: flex;

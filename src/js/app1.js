@@ -1,20 +1,42 @@
 import '../css/app1.css'
 import $ from "jquery";
-import Model from "./base/Model";
 import View from "./base/View";
-
-// 数据相关都放到m
-const m = new Model({
-    data: {
-        n: parseFloat(localStorage.getItem('n'))
-    },
-    update: function (data) {
-        Object.assign(m.data, data)
-        m.trigger('m:updated')
-        localStorage.setItem('n', m.data.n)
-    }
-})
+import Vue from 'vue';
 const init = (el) => {
+    new Vue({
+        el: el,
+        data:{n:parseFloat(localStorage.getItem('n'))},
+        methods:{
+            add() {
+                this.n+= 1
+            },
+            minus() {
+                this.n-= 1
+            },
+            mul() {
+                this.n*= 2
+            },
+            divide() {
+                this.n/= 2
+            },
+        },
+        watch:{
+            n:function (){
+                localStorage.setItem('n',this.n)
+            }
+        },
+        template:`
+        <section>
+            <div class="outer"><span id="number">{{n}}</span></div>
+            <div class="action">
+                <button @click="add">+1</button>
+                <button @click="minus">-1</button>
+                <button @click="mul">*2</button>
+                <button @click="divide">/2</button>
+            </div>
+        </section>`
+    })
+    return
     new View({
         el: el,
         data:m.data,
@@ -51,18 +73,6 @@ const init = (el) => {
             'click #minus1': 'minus',
             'click #mul2': 'mul',
             'click #divide2': 'divide'
-        },
-        add() {
-            m.update({n: m.data.n + 1})
-        },
-        minus() {
-            m.update({n: m.data.n - 1})
-        },
-        mul() {
-            m.update({n: m.data.n * 2})
-        },
-        divide() {
-            m.update({n: m.data.n / 2})
         },
 
     })// 将c暴露出去
