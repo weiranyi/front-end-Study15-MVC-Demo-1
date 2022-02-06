@@ -11349,6 +11349,10 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"../../../../../.config/yarn/global/node_modules/parcel/src/builtins/css-loader.js"}],"js/app2.js":[function(require,module,exports) {
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
 require('../css/app2.css');
 
 var _jquery = require('jquery');
@@ -11357,32 +11361,66 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var html = '\n    <section id="app2">\n        <ol class="tab-bar">\n            <li><span>1</span></li>\n            <li><span>2</span></li>\n        </ol>\n        <ol class="tab-content">\n            <li>\u5185\u5BB91</li>\n            <li>\u5185\u5BB92</li>\n        </ol>\n    </section>';
-var $element = (0, _jquery2.default)(html).appendTo((0, _jquery2.default)('body>.page'));
-var $tabBar = (0, _jquery2.default)('#app2 .tab-bar');
-var $tabContent = (0, _jquery2.default)('#app2 .tab-content');
+var eventBus = (0, _jquery2.default)({});
 var localKey = 'app2.index';
-var index = localStorage.getItem(localKey) || 0; // 新的语法支持的是??
-$tabBar.on('click', 'li', function (e) {
-    // 事件委托
-    var $li = (0, _jquery2.default)(e.currentTarget);
-    $li.addClass("selected").siblings().removeClass("selected");
-    var index = $li.index();
-    localStorage.setItem(localKey, index);
-    // 让css自己去管怎么实现; 样式和行为分离
-    $tabContent.children().eq(index).addClass('active').siblings().removeClass('active');
-    /* 永远不要用.css
-    $tabContent.children()
-        .eq(index).css({display:'block'})
-        .siblings().css({display:'none'})
-     */
-    /* 永远不要用.show .hidden
-    $tabContent.children()
-        .eq(index).show()
-        .siblings().hidden()
-    */
-});
-$tabBar.children().eq(index).trigger('click');
+var m = {
+    data: {
+        index: parseInt(localStorage.getItem(localKey) || 0) // 新的语法支持的是??
+    },
+    create: function create() {},
+    delete: function _delete() {},
+    update: function update(data) {
+        Object.assign(m.data, data);
+        eventBus.trigger('m:updated');
+        localStorage.setItem('index', m.data.index);
+    },
+    get: function get() {}
+};
+var v = {
+    el: null,
+    html: function html(index) {
+        return '\n    <div>\n        <ol class="tab-bar">\n            <li class="' + (index === 0 ? 'selected' : '') + '" data-index="0"><span>1</span></li>\n            <li class="' + (index === 1 ? 'selected' : '') + '" data-index="1"><span>2</span></li>\n        </ol>\n        <ol class="tab-content">\n            <li class="' + (index === 0 ? 'active' : '') + '" >\u5185\u5BB91</li>\n            <li class="' + (index === 1 ? 'active' : '') + '" >\u5185\u5BB92</li>\n        </ol>\n    </div>';
+    },
+    init: function init(container) {
+        v.el = (0, _jquery2.default)(container);
+    },
+    render: function render(index) {
+        if (v.el.children.length !== 0) {
+            v.el.empty();
+        }
+        (0, _jquery2.default)(v.html(index)).appendTo(v.el);
+    }
+};
+var c = {
+    // 提供初始化方法
+    init: function init(container) {
+        v.init(container);
+        v.render(m.data.index);
+        c.autobindEvents();
+        eventBus.on('m:updated', function () {
+            v.render(m.data.index);
+        });
+    },
+
+    events: {
+        'click .tab-bar li': 'x'
+    },
+    x: function x(e) {
+        var x = parseInt(e.currentTarget.dataset.index);
+        m.update({ index: x });
+    },
+    autobindEvents: function autobindEvents() {
+        for (var key in c.events) {
+            var value = c[c.events[key]];
+            var spaceIndex = key.indexOf(' ');
+            var part1 = key.slice(0, spaceIndex);
+            var part2 = key.slice(spaceIndex + 1);
+            v.el.on(part1, part2, value);
+        }
+    }
+};
+
+exports.default = c;
 },{"../css/app2.css":"css/app2.css","jquery":"../node_modules/jquery/dist/jquery.js"}],"css/app3.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
@@ -11461,7 +11499,9 @@ var _app = require('../js/app1.js');
 
 var _app2 = _interopRequireDefault(_app);
 
-require('../js/app2.js');
+var _app3 = require('../js/app2.js');
+
+var _app4 = _interopRequireDefault(_app3);
 
 require('../js/app3.js');
 
@@ -11472,6 +11512,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // import $ from 'jquery'
 
 _app2.default.init('#app1');
+_app4.default.init('#app2');
 },{"../css/reset.css":"css/reset.css","../css/page.css":"css/page.css","../js/app1.js":"js/app1.js","../js/app2.js":"js/app2.js","../js/app3.js":"js/app3.js","../js/app4.js":"js/app4.js"}],"../../../../../.config/yarn/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

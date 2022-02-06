@@ -4,7 +4,8 @@
 ol,ul{list-style: none;}
 /*
 大概14-19像素是滚动条像素，mac系统不算滚动条
-*/body {
+*/
+body {
     overflow: hidden;
 }
 /*后浪推前浪：后面的样式覆盖前面的，各自也保留各自独特的样式*/
@@ -23,7 +24,6 @@ body > .page > section {
 }#app2 {
     border: 1px solid cornflowerblue;
 }
-
 #app2 .tab-bar {
     display: flex;
 }
@@ -46,7 +46,6 @@ body > .page > section {
 #app2 .tab-content > li.active {
     display: block;
 }#app3{
-
 }
 #app3 .square{
     border: 1px solid grey;
