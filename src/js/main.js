@@ -7,5 +7,5 @@ import '../js/app3.js'
 import '../js/app4.js'
 // import $ from 'jquery'
 
-x.init('#app1')
-y.init('#app2')
+x('#app1')
+y('#app2')
