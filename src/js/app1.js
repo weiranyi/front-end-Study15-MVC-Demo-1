@@ -2,9 +2,6 @@ import '../css/app1.css'
 import $ from "jquery";
 import Model from "./base/Model";
 import View from "./base/View";
-import EventBus from "./base/EventBus";
-
-const eventBus = new EventBus()
 
 // 数据相关都放到m
 const m = new Model({
@@ -13,7 +10,7 @@ const m = new Model({
     },
     update: function (data) {
         Object.assign(m.data, data)
-        eventBus.trigger('m:updated')
+        m.trigger('m:updated')
         localStorage.setItem('n', m.data.n)
     }
 })
@@ -21,7 +18,6 @@ const init = (el) => {
     new View({
         el: el,
         data:m.data,
-        eventBus:eventBus,
         html: `
         <div>
             <div class="outer"><span id="number">{{n}}</span></div>
@@ -38,7 +34,7 @@ const init = (el) => {
             view.el = $(container)
             view.render(m.data.n)
             view.autoBindEvents()
-            eventBus.on('m:updated', () => {
+            m.on('m:updated', () => {
                 view.render(m.data.n)
             })
         },

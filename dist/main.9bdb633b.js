@@ -11252,108 +11252,7 @@ if ( typeof noGlobal === "undefined" ) {
 return jQuery;
 } );
 
-},{"process":"../../../../../.config/yarn/global/node_modules/process/browser.js"}],"js/base/Model.js":[function(require,module,exports) {
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Model = function () {
-    function Model(options) {
-        var _this = this;
-
-        _classCallCheck(this, Model);
-
-        ['data', 'update', 'create', 'delete', 'get'].forEach(function (key) {
-            if (key in options) {
-                _this[key] = options[key];
-            }
-        });
-    }
-
-    _createClass(Model, [{
-        key: 'create',
-        value: function create() {
-            // console?.error?.("还没有实现create") 新语法
-            console && console.error && console.error("还没有实现create");
-        }
-    }, {
-        key: 'delete',
-        value: function _delete() {
-            console && console.error && console.error("还没有实现delete");
-        }
-    }, {
-        key: 'update',
-        value: function update() {
-            console && console.error && console.error("还没有实现update");
-        }
-    }, {
-        key: 'get',
-        value: function get() {
-            close && close.error && console.error("还没有实现get");
-        }
-    }]);
-
-    return Model;
-}();
-
-exports.default = Model;
-},{}],"js/base/View.js":[function(require,module,exports) {
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _jquery = require('jquery');
-
-var _jquery2 = _interopRequireDefault(_jquery);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var View = function () {
-    // {el, html, render, data, eventBus, events}
-    function View(options) {
-        var _this = this;
-
-        _classCallCheck(this, View);
-
-        Object.assign(this, options);
-        this.el = (0, _jquery2.default)(this.el);
-        this.render(this.data);
-        this.autoBindEvents();
-        this.eventBus.on('m:updated', function () {
-            _this.render(_this.data);
-        });
-    }
-
-    _createClass(View, [{
-        key: 'autoBindEvents',
-        value: function autoBindEvents() {
-            for (var key in this.events) {
-                var value = this[this.events[key]];
-                var spaceIndex = key.indexOf(' ');
-                var part1 = key.slice(0, spaceIndex);
-                var part2 = key.slice(spaceIndex + 1);
-                this.el.on(part1, part2, value);
-            }
-        }
-    }]);
-
-    return View;
-}();
-
-exports.default = View;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/base/EventBus.js":[function(require,module,exports) {
+},{"process":"../../../../../.config/yarn/global/node_modules/process/browser.js"}],"js/base/EventBus.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11398,7 +11297,133 @@ var EventBus = function () {
 }();
 
 exports.default = EventBus;
-},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/app1.js":[function(require,module,exports) {
+},{"jquery":"../node_modules/jquery/dist/jquery.js"}],"js/base/Model.js":[function(require,module,exports) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _EventBus2 = require('./EventBus');
+
+var _EventBus3 = _interopRequireDefault(_EventBus2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Model = function (_EventBus) {
+    _inherits(Model, _EventBus);
+
+    function Model(options) {
+        _classCallCheck(this, Model);
+
+        // EventBus#constructor
+        var _this = _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this));
+
+        ['data', 'update', 'create', 'delete', 'get'].forEach(function (key) {
+            if (key in options) {
+                _this[key] = options[key];
+            }
+        });
+        return _this;
+    }
+
+    _createClass(Model, [{
+        key: 'create',
+        value: function create() {
+            // console?.error?.("还没有实现create") 新语法
+            console && console.error && console.error("还没有实现create");
+        }
+    }, {
+        key: 'delete',
+        value: function _delete() {
+            console && console.error && console.error("还没有实现delete");
+        }
+    }, {
+        key: 'update',
+        value: function update() {
+            console && console.error && console.error("还没有实现update");
+        }
+    }, {
+        key: 'get',
+        value: function get() {
+            close && close.error && console.error("还没有实现get");
+        }
+    }]);
+
+    return Model;
+}(_EventBus3.default);
+
+exports.default = Model;
+},{"./EventBus":"js/base/EventBus.js"}],"js/base/View.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _jquery = require("jquery");
+
+var _jquery2 = _interopRequireDefault(_jquery);
+
+var _EventBus2 = require("./EventBus");
+
+var _EventBus3 = _interopRequireDefault(_EventBus2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var View = function (_EventBus) {
+    _inherits(View, _EventBus);
+
+    // {el, html, render, data, eventBus, events}
+    function View(options) {
+        _classCallCheck(this, View);
+
+        var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
+
+        Object.assign(_this, options);
+        _this.el = (0, _jquery2.default)(_this.el);
+        _this.render(_this.data);
+        _this.autoBindEvents();
+        _this.on('m:updated', function () {
+            _this.render(_this.data);
+        });
+        return _this;
+    }
+
+    _createClass(View, [{
+        key: "autoBindEvents",
+        value: function autoBindEvents() {
+            for (var key in this.events) {
+                var value = this[this.events[key]];
+                var spaceIndex = key.indexOf(' ');
+                var part1 = key.slice(0, spaceIndex);
+                var part2 = key.slice(spaceIndex + 1);
+                this.el.on(part1, part2, value);
+            }
+        }
+    }]);
+
+    return View;
+}(_EventBus3.default);
+
+exports.default = View;
+},{"jquery":"../node_modules/jquery/dist/jquery.js","./EventBus":"js/base/EventBus.js"}],"js/app1.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -11419,13 +11444,7 @@ var _View = require("./base/View");
 
 var _View2 = _interopRequireDefault(_View);
 
-var _EventBus = require("./base/EventBus");
-
-var _EventBus2 = _interopRequireDefault(_EventBus);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var eventBus = new _EventBus2.default();
 
 // 数据相关都放到m
 var m = new _Model2.default({
@@ -11434,7 +11453,7 @@ var m = new _Model2.default({
     },
     update: function update(data) {
         Object.assign(m.data, data);
-        eventBus.trigger('m:updated');
+        m.trigger('m:updated');
         localStorage.setItem('n', m.data.n);
     }
 });
@@ -11442,14 +11461,13 @@ var init = function init(el) {
     new _View2.default({
         el: el,
         data: m.data,
-        eventBus: eventBus,
         html: "\n        <div>\n            <div class=\"outer\"><span id=\"number\">{{n}}</span></div>\n            <div class=\"action\">\n                <button id=\"add1\">+1</button>\n                <button id=\"minus1\">-1</button>\n                <button id=\"mul2\">*2</button>\n                <button id=\"divide2\">/2</button>\n            </div>\n        </div>\n    ",
         // 提供初始化方法
         init: function init(container) {
             view.el = (0, _jquery2.default)(container);
             view.render(m.data.n);
             view.autoBindEvents();
-            eventBus.on('m:updated', function () {
+            m.on('m:updated', function () {
                 view.render(m.data.n);
             });
         },
@@ -11482,7 +11500,7 @@ var init = function init(el) {
     }); // 将c暴露出去
 };
 exports.default = init;
-},{"../css/app1.css":"css/app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model":"js/base/Model.js","./base/View":"js/base/View.js","./base/EventBus":"js/base/EventBus.js"}],"css/app2.css":[function(require,module,exports) {
+},{"../css/app1.css":"css/app1.css","jquery":"../node_modules/jquery/dist/jquery.js","./base/Model":"js/base/Model.js","./base/View":"js/base/View.js"}],"css/app2.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
 module.hot.dispose(reloadCSS);
